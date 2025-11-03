@@ -44,24 +44,24 @@ stages:
       nfiles: 2
     - path: src\features\build_features.py
       hash: md5
-      md5: 1a9ed17d99185766198d2fd90ffe2e9f
-      size: 4612
+      md5: 109f4fe49605750ab8649c492637edfd
+      size: 4628
     params:
       params.yaml:
         feature_engineering.max_features: 600
     outs:
     - path: data/features
       hash: md5
-      md5: a7e18358404cc9ba6c67f225d95772e8.dir
-      size: 16611947
+      md5: c8627688a1ab0544172e80acba6f9d61.dir
+      size: 33938206
       nfiles: 2
   model_buliding:
     cmd: python src\models\train_model.py
     deps:
     - path: data/features
       hash: md5
-      md5: a7e18358404cc9ba6c67f225d95772e8.dir
-      size: 16611947
+      md5: c8627688a1ab0544172e80acba6f9d61.dir
+      size: 33938206
       nfiles: 2
     - path: src\models\train_model.py
       hash: md5
@@ -74,19 +74,19 @@ stages:
     outs:
     - path: data/gradient_boosting_model.pkl
       hash: md5
-      md5: f650f6ea94212a97850289936090ed1d
-      size: 181096
+      md5: e2fac60c162a0c67fce04d20c67da042
+      size: 184472
   model_evaluation:
     cmd: python src/models/model_evaluvarion.py
     deps:
     - path: data/features/test_bow.csv
       hash: md5
-      md5: e34dd4385382d942e681c6e65c896320
-      size: 3324952
+      md5: 1db95c31c0663c0426ff5d96b8b192a0
+      size: 6787580
     - path: data/gradient_boosting_model.pkl
       hash: md5
-      md5: f650f6ea94212a97850289936090ed1d
-      size: 181096
+      md5: e2fac60c162a0c67fce04d20c67da042
+      size: 184472
     - path: src/models/model_evaluvarion.py
       hash: md5
       md5: 546921b198c84c56fec7a5205cd1be83
@@ -94,5 +94,5 @@ stages:
     outs:
     - path: data/metrics/metrics.json
       hash: md5
-      md5: 8ca5cc16e88a49a03c797c3a37bd8d12
+      md5: 5dc6814112f51189f6567fd2afb2a5c4
       size: 150
