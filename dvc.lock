@@ -1,0 +1,98 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/data/make_dataset.py
+    deps:
+    - path: src/data/make_dataset.py
+      hash: md5
+      md5: 186c35481ce12ceb2f177a9c70d117fd
+      size: 2875
+    params:
+      params.yaml:
+        data_ingation.test_size: 0.2
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: 9a53f66f52022e1aee157feea8b1cc29.dir
+      size: 1006158
+      nfiles: 2
+  data_train_processesing:
+    cmd: python  src/features/data_preprocessing.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 9a53f66f52022e1aee157feea8b1cc29.dir
+      size: 1006158
+      nfiles: 2
+    - path: src/features/data_preprocessing.py
+      hash: md5
+      md5: 900c982602ea18afb1174d0240672baa
+      size: 5532
+    outs:
+    - path: data\processed
+      hash: md5
+      md5: 95d0670588363426e242efa63db07f6c.dir
+      size: 679298
+      nfiles: 2
+  feature_engineering:
+    cmd: python src\features\build_features.py
+    deps:
+    - path: data\processed
+      hash: md5
+      md5: 95d0670588363426e242efa63db07f6c.dir
+      size: 679298
+      nfiles: 2
+    - path: src\features\build_features.py
+      hash: md5
+      md5: 1a9ed17d99185766198d2fd90ffe2e9f
+      size: 4612
+    params:
+      params.yaml:
+        feature_engineering.max_features: 600
+    outs:
+    - path: data/features
+      hash: md5
+      md5: a7e18358404cc9ba6c67f225d95772e8.dir
+      size: 16611947
+      nfiles: 2
+  model_buliding:
+    cmd: python src\models\train_model.py
+    deps:
+    - path: data/features
+      hash: md5
+      md5: a7e18358404cc9ba6c67f225d95772e8.dir
+      size: 16611947
+      nfiles: 2
+    - path: src\models\train_model.py
+      hash: md5
+      md5: 776a1c9413282e1bfbb7e502b42f4bef
+      size: 3892
+    params:
+      params.yaml:
+        model_building.learning_rate: 0.6
+        model_building.n_estimators: 100
+    outs:
+    - path: data/gradient_boosting_model.pkl
+      hash: md5
+      md5: f650f6ea94212a97850289936090ed1d
+      size: 181096
+  model_evaluation:
+    cmd: python src/models/model_evaluvarion.py
+    deps:
+    - path: data/features/test_bow.csv
+      hash: md5
+      md5: e34dd4385382d942e681c6e65c896320
+      size: 3324952
+    - path: data/gradient_boosting_model.pkl
+      hash: md5
+      md5: f650f6ea94212a97850289936090ed1d
+      size: 181096
+    - path: src/models/model_evaluvarion.py
+      hash: md5
+      md5: 546921b198c84c56fec7a5205cd1be83
+      size: 3379
+    outs:
+    - path: data/metrics/metrics.json
+      hash: md5
+      md5: 8ca5cc16e88a49a03c797c3a37bd8d12
+      size: 150
